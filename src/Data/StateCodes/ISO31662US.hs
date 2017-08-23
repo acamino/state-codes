@@ -1,14 +1,16 @@
+-- The information used in this module was pulled from the @Wikipedia article
+-- about ISO_3166-2:US@: <https://hackage.haskell.org/package/req-conduit>.
+
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE PatternGuards         #-}
 
--- | This file is generated from the Wikipedia page
--- <https://en.wikipedia.org/wiki/ISO_3166-2:US>
-
 module Data.StateCodes.ISO31662US
   ( StateCode(..)
   , stateList
+  , districtList
+  , outlyingAreasList
   , fromMName
   , fromMText
   , fromName
@@ -18,73 +20,74 @@ module Data.StateCodes.ISO31662US
   ) where
 
 import           Control.Applicative   (pure)
+import           Control.Arrow         ((&&&))
 import           Data.Aeson
 import           Data.Text             (Text)
 import qualified Data.Text             as T
 import           Data.Typeable
 import           Text.Shakespeare.I18N
 
-data StateCode = AL
-               | AK
-               | AZ
-               | AR
-               | CA
-               | CO
-               | CT
-               | DE
-               | FL
-               | GA
-               | HI
-               | ID
-               | IL
-               | IN
-               | IA
-               | KS
-               | KY
-               | LA
-               | ME
-               | MD
-               | MA
-               | MI
-               | MN
-               | MS
-               | MO
-               | MT
-               | NE
-               | NV
-               | NH
-               | NJ
-               | NM
-               | NY
-               | NC
-               | ND
-               | OH
-               | OK
-               | OR
-               | PA
-               | RI
-               | SC
-               | SD
-               | TN
-               | TX
-               | UT
-               | VT
-               | VA
-               | WA
-               | WV
-               | WI
-               | WY
-               | DC
-               | AS
-               | GU
-               | MP
-               | PR
-               | UM
-               | VI
+data StateCode = AL     -- ^ Alabama
+               | AK     -- ^ Alaska
+               | AZ     -- ^ Arizona
+               | AR     -- ^ Arkansas
+               | CA     -- ^ California
+               | CO     -- ^ Colorado
+               | CT     -- ^ Connecticut
+               | DE     -- ^ Delaware
+               | FL     -- ^ Florida
+               | GA     -- ^ Georgia
+               | HI     -- ^ Hawaii
+               | ID     -- ^ Idaho
+               | IL     -- ^ Illinois
+               | IN     -- ^ Indiana
+               | IA     -- ^ Iowa
+               | KS     -- ^ Kansas
+               | KY     -- ^ Kentucky
+               | LA     -- ^ Louisiana
+               | ME     -- ^ Maine
+               | MD     -- ^ Maryland
+               | MA     -- ^ Massachusetts
+               | MI     -- ^ Michigan
+               | MN     -- ^ Minnesota
+               | MS     -- ^ Mississippi
+               | MO     -- ^ Missouri
+               | MT     -- ^ Montana
+               | NE     -- ^ Nebraska
+               | NV     -- ^ Nevada
+               | NH     -- ^ New Hampshire
+               | NJ     -- ^ New Jersey
+               | NM     -- ^ New Mexico
+               | NY     -- ^ New York
+               | NC     -- ^ North Carolina
+               | ND     -- ^ North Dakota
+               | OH     -- ^ Ohio
+               | OK     -- ^ Oklahoma
+               | OR     -- ^ Oregon
+               | PA     -- ^ Pennsylvania
+               | RI     -- ^ Rhode Island
+               | SC     -- ^ South Carolina
+               | SD     -- ^ South Dakota
+               | TN     -- ^ Tennessee
+               | TX     -- ^ Texas
+               | UT     -- ^ Utah
+               | VT     -- ^ Vermont
+               | VA     -- ^ Virginia
+               | WA     -- ^ Washington
+               | WV     -- ^ West Virginia
+               | WI     -- ^ Wisconsin
+               | WY     -- ^ Wyoming
+               | DC     -- ^ District of Columbia
+               | AS     -- ^ American Samoa
+               | GU     -- ^ Guam
+               | MP     -- ^ Northern Mariana Islands
+               | PR     -- ^ Puerto Rico
+               | UM     -- ^ United States Minor Outlying Islands
+               | VI     -- ^ Virgin Islands, U.S.
                deriving (Bounded, Eq, Enum, Show, Read, Ord, Typeable)
 
 
--- | Maybe get the StateCode from the text code.
+-- | Maybe get the state code from the text code
 
 fromMText :: Text -> Maybe StateCode
 fromMText "AL" = Just AL
@@ -147,7 +150,7 @@ fromMText "VI" = Just VI
 fromMText _    = Nothing
 
 
--- | Get the StateCode from the text code. Errors if the code is unknown
+-- | Get the state code from the text code. Errors if the code is unknown
 
 fromText :: Text -> StateCode
 fromText c = case fromMText c of
@@ -155,7 +158,7 @@ fromText c = case fromMText c of
                _       -> error $ "fromText: Unknown state code:" ++ T.unpack c
 
 
--- | Get the code as text
+-- | Get the state code as text
 
 toText :: StateCode -> Text
 toText AL = "AL"
@@ -217,7 +220,7 @@ toText UM = "UM"
 toText VI = "VI"
 
 
--- | Maybe get the code from the user readable name
+-- | Maybe get the state code from the state readable name
 
 fromMName :: Text -> Maybe StateCode
 fromMName "Alabama"                              = Just AL
@@ -280,7 +283,7 @@ fromMName "Virgin Islands, U.S."                 = Just VI
 fromMName _                                      = Nothing
 
 
--- | Get the StateCode from the user readable name. Errors if the name is unknown
+-- | Get the state code from the state readable name. Errors if the name is unknown
 
 fromName:: Text -> StateCode
 fromName s = case fromMName s of
@@ -288,7 +291,7 @@ fromName s = case fromMName s of
                _       -> error $ "fromName: Unknown state code:" ++ T.unpack s
 
 
--- | Get the user readable name
+-- | Get the state readable name
 
 toName :: StateCode -> Text
 toName AL = "Alabama"
@@ -350,68 +353,25 @@ toName UM = "United States Minor Outlying Islands"
 toName VI = "Virgin Islands, U.S."
 
 
--- | List of names sorted by alphabetical order, with state code
+-- | List of states sorted by alphabetical order, with state code
 -- this is ready to be used in a yesod selectField, for example
 
-stateList :: [(T.Text, StateCode)]
-stateList = [ ("Alabama", AL)
-            , ("Alaska", AK)
-            , ("Arizona", AZ)
-            , ("Arkansas", AR)
-            , ("California", CA)
-            , ("Colorado", CO)
-            , ("Connecticut", CT)
-            , ("Delaware", DE)
-            , ("Florida", FL)
-            , ("Georgia", GA)
-            , ("Hawaii", HI)
-            , ("Idaho", ID)
-            , ("Illinois", IL)
-            , ("Indiana", IN)
-            , ("Iowa", IA)
-            , ("Kansas", KS)
-            , ("Kentucky", KY)
-            , ("Louisiana", LA)
-            , ("Maine", ME)
-            , ("Maryland", MD)
-            , ("Massachusetts", MA)
-            , ("Michigan", MI)
-            , ("Minnesota", MN)
-            , ("Mississippi", MS)
-            , ("Missouri", MO)
-            , ("Montana", MT)
-            , ("Nebraska", NE)
-            , ("Nevada", NV)
-            , ("New Hampshire", NH)
-            , ("New Jersey", NJ)
-            , ("New Mexico", NM)
-            , ("New York", NY)
-            , ("North Carolina", NC)
-            , ("North Dakota", ND)
-            , ("Ohio", OH)
-            , ("Oklahoma", OK)
-            , ("Oregon", OR)
-            , ("Pennsylvania", PA)
-            , ("Rhode Island", RI)
-            , ("South Carolina", SC)
-            , ("South Dakota", SD)
-            , ("Tennessee", TN)
-            , ("Texas", TX)
-            , ("Utah", UT)
-            , ("Vermont", VT)
-            , ("Virginia", VA)
-            , ("Washington", WA)
-            , ("West Virginia", WV)
-            , ("Wisconsin", WI)
-            , ("Wyoming", WY)
-            , ("District of Columbia", DC)
-            , ("American Samoa", AS)
-            , ("Guam", GU)
-            , ("Northern Mariana Islands", MP)
-            , ("Puerto Rico", PR)
-            , ("United States Minor Outlying Islands", UM)
-            , ("Virgin Islands, U.S.", VI)
-            ]
+stateList :: [(Text, StateCode)]
+stateList = map (toName &&& id) $ enumFromTo minBound WY
+
+
+-- | List of districts sorted by alphabetical order, with state code
+-- this is ready to be used in a yesod selectField, for example
+
+districtList :: [(Text, StateCode)]
+districtList = [("District of Columbia", DC)]
+
+
+-- | List of outlying areas sorted by alphabetical order, with state code
+-- this is ready to be used in a yesod selectField, for example
+
+outlyingAreasList :: [(Text, StateCode)]
+outlyingAreasList = map (toName &&& id) $ enumFromTo AS maxBound
 
 
 -- | To JSON: as a simple string
@@ -428,7 +388,7 @@ instance FromJSON StateCode where
   parseJSON _          = fail "StateCode"
 
 
--- | Show user readable name, in English (ignoring locale for now)
+-- | Show state readable name, in English (ignoring locale for now)
 
 instance RenderMessage master StateCode where
   renderMessage _ _ = toName

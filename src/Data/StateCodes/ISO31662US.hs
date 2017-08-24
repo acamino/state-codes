@@ -1,5 +1,5 @@
 -- The information used in this module was pulled from the @Wikipedia article
--- about ISO_3166-2:US@: <https://hackage.haskell.org/package/req-conduit>.
+-- about ISO_3166-2:US@: <https://en.wikipedia.org/wiki/ISO_3166-2:US>.
 
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}

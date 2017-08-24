@@ -1,6 +1,7 @@
 # state-codes
 
 [![Build Status](https://travis-ci.org/acamino/state-codes.svg?branch=master)](https://travis-ci.org/acamino/state-codes)
+[![Hackage version](https://img.shields.io/hackage/v/state-codes.svg)](http://hackage.haskell.org/package/state-codes)
 
 This package provides the ISO 3166-2:US state codes and i18n names.
 This work is entirely based on the package [Data.CountryCodes](http://hackage.haskell.org/package/country-codes).

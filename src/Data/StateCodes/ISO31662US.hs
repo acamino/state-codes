@@ -1,6 +1,7 @@
 -- The information used in this module was pulled from the @Wikipedia article
 -- about ISO_3166-2:US@: <https://en.wikipedia.org/wiki/ISO_3166-2:US>.
 
+{-# LANGUAGE CPP                   #-}
 {-# LANGUAGE DeriveDataTypeable    #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -20,13 +21,16 @@ module Data.StateCodes.ISO31662US
   , toText
   ) where
 
-import           Control.Applicative   (pure)
 import           Control.Arrow         ((&&&))
 import           Data.Aeson
 import           Data.Text             (Text)
 import qualified Data.Text             as T
 import           Data.Typeable
 import           Text.Shakespeare.I18N
+
+#if !MIN_VERSION_base(4,8,0)
+import           Control.Applicative   (pure)
+#endif
 
 data StateCode = AL     -- ^ Alabama
                | AK     -- ^ Alaska

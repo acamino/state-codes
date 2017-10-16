@@ -1,27 +1,20 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS -fno-warn-orphans  #-}
-
 module Data.StateCodesSpec where
 
 import           Data.Aeson
-import qualified Data.Aeson            as A
 import           Test.Hspec
 import           Test.Hspec.QuickCheck
 import           Test.QuickCheck
 
 import           Data.StateCodes
 
-instance Arbitrary StateCode where
-  arbitrary = elements [minBound ..]
-
-
 spec :: Spec
-spec = do
-  prop "fromName . toName" $ forAll arbitrary $ \code ->
-    (fromName . toName) code == code
+spec =
+  describe "StateCode" $ do
+    prop "fromName . toName" $ forAll arbitraryBoundedEnum $ \code ->
+      (fromName . toName) code == (code :: StateCode)
 
-  prop "fromText . toText" $ forAll arbitrary $ \code ->
-    (fromText . toText) code == code
+    prop "fromText . toText" $ forAll arbitraryBoundedEnum $ \code ->
+      (fromText . toText) code == (code :: StateCode)
 
-  prop "fromJSON . toJSON" $ forAll (arbitrary :: Gen StateCode)$ \code ->
-    (fromJSON . toJSON) code == A.Success code
+    prop "decode . encode" $ forAll arbitraryBoundedEnum $ \code ->
+      (decode . encode) code == Just (code :: StateCode)

@@ -1,5 +1,5 @@
 name:                state-codes
-version:             0.1.2
+version:             0.1.3
 synopsis:            ISO 3166-2:US state codes and i18n names
 description:         This package provides the ISO 3166-2:US state codes and i18n names
 homepage:            https://github.com/acamino/state-codes#README

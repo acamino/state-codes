@@ -22,6 +22,7 @@ module Data.StateCodes.ISO31662US
   ) where
 
 import           Control.Arrow         ((&&&))
+import           Control.DeepSeq       (NFData(..))
 import           Data.Aeson
 import           Data.Text             (Text)
 import qualified Data.Text             as T
@@ -397,3 +398,8 @@ instance FromJSON StateCode where
 
 instance RenderMessage master StateCode where
   renderMessage _ _ = toName
+
+
+-- | Allow the deep evaluation of StateCode with `deepseq`
+instance NFData StateCode where
+  rnf a = a `seq` ()

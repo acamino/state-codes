@@ -1,6 +1,6 @@
 # state-codes
 
-[![Build Status](https://travis-ci.org/acamino/state-codes.svg?branch=master)](https://travis-ci.org/acamino/state-codes)
+![CI](https://github.com/acamino/state-codes/actions/workflows/ci.yml/badge.svg)
 [![Hackage version](https://img.shields.io/hackage/v/state-codes.svg)](http://hackage.haskell.org/package/state-codes)
 
 This package provides the ISO 3166-2:US state codes and i18n names.
